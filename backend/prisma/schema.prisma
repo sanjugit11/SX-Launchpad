@@ -1,0 +1,153 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(uuid())
+  wallet          String   @unique
+  sxse_registered Boolean  @default(false)
+  device_id       String?
+  created_at      DateTime @default(now())
+
+  transactions          Transaction[]
+  committedSubAccounts  CommittedSubAccount[]
+  launchpadPurchases    LaunchpadPurchase[]
+  referralsMade         Referral[] @relation("Referrer")
+  referralsReceived     Referral[] @relation("Referee")
+}
+
+model Transaction {
+  id      String   @id @default(uuid())
+  user_id String
+  user    User     @relation(fields: [user_id], references: [id])
+  type    String   // DEPOSIT, WITHDRAW, BUY_STABLES
+  amount  Float
+  tx_hash String
+  status  String   // PENDING, SUCCESS, FAILED
+}
+
+model CommittedSubAccount {
+  id         String   @id @default(uuid())
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id])
+  principal  Float
+  yield      Float    @default(0)
+  created_at DateTime @default(now())
+  unlock_at  DateTime
+}
+
+model LaunchpadPurchase {
+  id             Int      @id @default(autoincrement())
+  user_id        String
+  user           User     @relation(fields: [user_id], references: [id])
+  lt_amount      Float
+  claimed_amount Float    @default(0)
+  cliff_end      DateTime
+  vesting_end    DateTime
+  claimed_at     DateTime?
+  phase          Int      @default(1)
+  status         String   // VESTING, CLAIMED, FORFEITED
+}
+
+model ResellingListing {
+  id             String   @id @default(uuid())
+  purchase_id    Int
+  seller_wallet  String
+  amount         Float
+  price          Float
+  status         String   // ACTIVE, SOLD, CANCELLED
+  created_at     DateTime @default(now())
+  purchased_at   DateTime?
+}
+
+model MarketplaceOwnership {
+  id           String   @id @default(uuid())
+  purchase_id  Int
+  owner_wallet String
+  amount       Float
+  vesting_end  DateTime
+  cliff_end    DateTime
+}
+
+model Referral {
+  id       String  @id @default(uuid())
+  referrer String
+  referrerUser User @relation("Referrer", fields: [referrer], references: [wallet])
+  referee  String
+  refereeUser  User @relation("Referee", fields: [referee], references: [wallet])
+  status   String  // PENDING, SUCCESS
+  rewarded Boolean @default(false)
+}
+
+model LeaderboardCache {
+  wallet String @id
+  count  Int    @default(0)
+  volume Float  @default(0)
+  rank   Int    @default(0)
+}
+
+model Event {
+  id           String   @id @default(uuid())
+  chain_id     Int
+  contract     String
+  event_name   String
+  tx_hash      String
+  block_number Int
+  block_hash   String
+  payload      Json
+  created_at   DateTime @default(now())
+}
+
+model ProcessedBlock {
+  block_number Int    @id
+  block_hash   String
+}
+
+model SyncStatus {
+  chain_id   Int @id
+  last_block Int
+}
+
+model ReorgLog {
+  id     String @id @default(uuid())
+  block  Int
+  action String
+}
+
+model IndexingError {
+  id    String @id @default(uuid())
+  error String
+  block Int
+}
+
+model JailbreakAttempt {
+  id        String   @id @default(uuid())
+  wallet    String?
+  ip        String?
+  pattern   String
+  timestamp DateTime @default(now())
+}
+
+model AdminAction {
+  id        String   @id @default(uuid())
+  admin     String
+  action    String
+  timestamp DateTime @default(now())
+}
+
+model Proposal {
+  id            Int      @id
+  target        String
+  data          String
+  approvalCount Int      @default(0)
+  executed      Boolean  @default(false)
+  created_at    DateTime @default(now())
+}

@@ -1,0 +1,36 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx dotenv-cli -e ../.env -- nodemon src/index.ts",
+    "start": "npx dotenv-cli -e ../.env -- ts-node src/index.ts",
+    "indexer": "npx dotenv-cli -e ../.env -- ts-node src/run-indexer.ts",
+    "prisma:generate": "npx dotenv-cli -e ../.env -- prisma generate",
+    "prisma:push": "npx dotenv-cli -e ../.env -- prisma db push",
+    "demo:security": "npx dotenv-cli -e ../.env -- ts-node demo_security.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "dotenv-cli": "^11.0.0",
+    "ethers": "^6.16.0",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.3",
+    "nodemon": "^3.1.14",
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}
