@@ -8,7 +8,7 @@ import { formatUnits } from "viem";
 import { useSearchParams } from "next/navigation";
 import { REFERRAL_ABI, ERC20_ABI } from "@/lib/contracts";
 
-export default function ReferralPage() {
+function ReferralContent() {
   const { isConnected, address } = useAccount();
   const searchParams = useSearchParams();
   const refCodeParam = searchParams.get("ref");
@@ -361,5 +361,17 @@ export default function ReferralPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ReferralPage() {
+  return (
+    <React.Suspense fallback={
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
+      </div>
+    }>
+      <ReferralContent />
+    </React.Suspense>
   );
 }

@@ -1,5 +1,11 @@
 "use client";
 
+if (typeof window === "undefined") {
+  (global as any).indexedDB = {
+    open: () => ({}),
+  };
+}
+
 import React, { ReactNode } from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { defineChain } from "viem";
@@ -25,6 +31,7 @@ const connectors = [
 const config = createConfig({
   chains: [hoodi],
   connectors,
+  ssr: true,
   transports: {
     [hoodi.id]: http("https://hoodi.drpc.org"),
   },
