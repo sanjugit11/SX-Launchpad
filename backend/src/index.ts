@@ -29,6 +29,11 @@ app.use(apiLimiterMinute);
 // Routes
 app.use('/api', apiRoutes);
 
-app.listen(Number(port), '127.0.0.1', () => {
-  console.log(`SX Launchpad Backend API Gateway running on port ${port}`);
-});
+export { app };
+export default app;
+
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(Number(port), '127.0.0.1', () => {
+    console.log(`SX Launchpad Backend API Gateway running on port ${port}`);
+  });
+}

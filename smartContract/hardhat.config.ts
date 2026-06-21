@@ -6,14 +6,25 @@ import * as path from "path";
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const config: HardhatUserConfig = {
+  // solidity: {
+  //   version: "0.8.24",
+  //   settings: {
+  //     optimizer: {
+  //       enabled: true,
+  //       runs: 200,
+  //     },
+  //   },
+  // },
   solidity: {
     version: "0.8.24",
     settings: {
-      optimizer: {
-        enabled: true,
-        runs: 200,
-      },
-    },
+      modelChecker: {
+        engine: "chc",
+        targets: ["assert", "overflow", "underflow", "divByZero"],
+        timeout: 10000,
+        solvers: ["z3"]
+      }
+    }
   },
  networks: {
     hoodi: {

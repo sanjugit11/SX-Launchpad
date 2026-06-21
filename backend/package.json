@@ -9,7 +9,8 @@
     "indexer": "npx dotenv-cli -e ../.env -- ts-node src/run-indexer.ts",
     "prisma:generate": "npx dotenv-cli -e ../.env -- prisma generate",
     "prisma:push": "npx dotenv-cli -e ../.env -- prisma db push",
-    "demo:security": "npx dotenv-cli -e ../.env -- ts-node demo_security.ts"
+    "demo:security": "npx dotenv-cli -e ../.env -- ts-node demo_security.ts",
+    "test": "npx dotenv-cli -e ../.env -- jest --runInBand --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
@@ -27,9 +28,14 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/node": "^25.9.3",
+    "@types/supertest": "^7.2.0",
+    "jest": "^30.4.2",
     "nodemon": "^3.1.14",
     "prisma": "^5.22.0",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   }
